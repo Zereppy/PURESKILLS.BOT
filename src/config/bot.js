@@ -35,7 +35,7 @@ export const botConfig = {
 
 https://pureskill.netlify.app/ ",
         // Activity type number (0 = Playing).
-        type: 1, 
+        type: 3, 
       },
     ],
   },
