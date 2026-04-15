@@ -18,7 +18,7 @@ export const botConfig = {
       {
         name: "Listening", 
         type: 2, // Watching
-        state: "https://open.spotify.com/track/4Oai6CNbyktfWoRCjXU7eh",
+        state: "",
         details: "()",
         
         timestamps: {
