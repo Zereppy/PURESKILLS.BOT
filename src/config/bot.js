@@ -8,55 +8,6 @@ export const botConfig = {
   description: "Titan Bot: Advanced Management & Competitive Integration",
 
   // =========================
-  // BOT PRESENCE (Mapped to C++ UpdatePresence)
-  // =========================
-  presence: {
-    status: "online",
-    // Matches: discordPresence.details = "Listening"
-    details: "Listening", 
-    // Matches: discordPresence.state = "Spotify"
-    state: "https://media.discordapp.net/attachments/1468666509273600134/1473813254001397912/file_000000001f807209a388e05d3cda4395.png?ex=69e0be4d&is=69df6ccd&hm=0ddb49ba2f379fd99613ea02f5e66414a57151bfd91d639a67c98ba8547f8e53&=&format=webp&quality=lossless&width=1029&height=686", 
-
-    activities: [
-      {
-        name: "Discord", 
-        type: 3, // Listening
-        state: "Spotify",
-        details: "Listening",
-        
-        // Matches C++ Unix timestamps (10-digit)
-        timestamps: {
-          start: 1507665886,
-          end: 1507665886,
-        },
-
-        assets: {
-          // Matches: discordPresence.largeImageText
-          large_text: "https://media.discordapp.net/attachments/1468666509273600134/1473813254001397912/file_000000001f807209a388e05d3cda4395.png?ex=69e0be4d&is=69df6ccd&hm=0ddb49ba2f379fd99613ea02f5e66414a57151bfd91d639a67c98ba8547f8e53&=&format=webp&quality=lossless&width=1029&height=686",
-          // Matches: discordPresence.smallImageText
-          small_text: "Rogue - Level 100",
-          // Matches: discordPresence.largeImageKey
-          large_image: "https://media.discordapp.net/attachments/1468666509273600134/1473813254001397912/file_000000001f807209a388e05d3cda4395.png?ex=69e0be4d&is=69df6ccd&hm=0ddb49ba2f379fd99613ea02f5e66414a57151bfd91d639a67c98ba8547f8e53&=&format=webp&quality=lossless&width=1029&height=686", 
-          // From your C++ logic, small_image wasn't explicitly set, but added for consistency
-          small_image: "rogue",   
-        },
-
-        party: {
-          // Matches: discordPresence.partyId
-          id: "ae488379-351d-4a4f-ad32-2b9b01c91657",
-          // Matches: discordPresence.partySize (1) and partyMax (5)
-          size: [1, 5], 
-        },
-
-        secrets: {
-          // Matches: discordPresence.joinSecret
-          join: "MTI4NzM0OjFpMmhuZToxMjMxMjM="
-        }
-      },
-    ],
-  },
-
-  // =========================
   // COMMAND BEHAVIOR
   // =========================
   commands: {
@@ -253,7 +204,7 @@ if (configErrors.length > 0) {
 }
 
 // =========================
-// EXPORTS (The Fix)
+// EXPORTS
 // =========================
 export const BotConfig = botConfig; 
 
@@ -262,27 +213,6 @@ export function getColor(path, fallback = "#99AAB5") {
   if (typeof path === "string" && path.startsWith("#")) return parseInt(path.replace("#", ""), 16);
   const result = path.split(".").reduce((obj, key) => (obj && obj[key] !== undefined ? obj[key] : fallback), botConfig.embeds.colors);
   return typeof result === "string" && result.startsWith("#") ? parseInt(result.replace("#", ""), 16) : result;
-}
-
-/**
- * C++ Equivalent Implementation for reference/integration
- * This mimics the logic used in your static void UpdatePresence()
- */
-export function getPresenceForCPP() {
-  const act = botConfig.presence.activities[0];
-  return {
-    state: act.state,
-    details: act.details,
-    startTimestamp: act.timestamps.start,
-    endTimestamp: act.timestamps.end,
-    largeImageKey: act.assets.large_image,
-    largeImageText: act.assets.large_text,
-    smallImageText: act.assets.small_text,
-    partyId: act.party.id,
-    partySize: act.party.size[0],
-    partyMax: act.party.size[1],
-    joinSecret: act.secrets.join
-  };
 }
 
 export default botConfig;
