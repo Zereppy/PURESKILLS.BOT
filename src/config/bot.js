@@ -20,7 +20,7 @@ export const botConfig = {
     activities: [
       {
         name: "Spotify", 
-        type: 2, // Listening
+        type: 3, // Listening
         state: "Spotify",
         details: "Listening",
         
@@ -32,11 +32,11 @@ export const botConfig = {
 
         assets: {
           // Matches: discordPresence.largeImageText
-          large_text: "Numbani",
+          large_text: "https://media.discordapp.net/attachments/1468666509273600134/1473813254001397912/file_000000001f807209a388e05d3cda4395.png?ex=69e0be4d&is=69df6ccd&hm=0ddb49ba2f379fd99613ea02f5e66414a57151bfd91d639a67c98ba8547f8e53&=&format=webp&quality=lossless&width=1029&height=686",
           // Matches: discordPresence.smallImageText
           small_text: "Rogue - Level 100",
           // Matches: discordPresence.largeImageKey
-          large_image: "file_000000001f807209a388e05d3cda4395", 
+          large_image: "https://media.discordapp.net/attachments/1468666509273600134/1473813254001397912/file_000000001f807209a388e05d3cda4395.png?ex=69e0be4d&is=69df6ccd&hm=0ddb49ba2f379fd99613ea02f5e66414a57151bfd91d639a67c98ba8547f8e53&=&format=webp&quality=lossless&width=1029&height=686", 
           // From your C++ logic, small_image wasn't explicitly set, but added for consistency
           small_image: "rogue",   
         },
