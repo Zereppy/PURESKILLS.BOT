@@ -4,7 +4,7 @@ export const botConfig = {
   // =========================
   // BOT PREFIX & IDENTITY
   // =========================
-  prefix: "/",
+  prefix: "x",
   description: "Titan Bot: Advanced Management & Competitive Integration",
 
   // =========================
