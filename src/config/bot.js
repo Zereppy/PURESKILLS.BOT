@@ -18,8 +18,8 @@ export const botConfig = {
       {
         name: ",help", 
         type: 3, // Watching
-        state: "Serverr",
-        details: "Competitive",
+        state: "Server: https://discord.gg/xUt2eYnFPA",
+        details: "https://open.spotify.com/track/4Oai6CNbyktfWoRCjXU7eh",
         
         timestamps: {
           start: 1507665886000,
