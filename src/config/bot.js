@@ -17,7 +17,7 @@ export const botConfig = {
     activities: [
       {
         name: "Listening", 
-        type: 3, // Watching
+        type: 2, // Watching
         state: "Spotify",
         details: "(https://open.spotify.com/track/4Oai6CNbyktfWoRCjXU7eh)",
         
