@@ -8,37 +8,48 @@ export const botConfig = {
   description: "Titan Bot: Advanced Management & Competitive Integration",
 
   // =========================
-  // BOT PRESENCE (C++ DiscordRichPresence Mapping)
+  // BOT PRESENCE (Mapped to C++ UpdatePresence)
   // =========================
   presence: {
     status: "online",
-    bio: "Listening",
+    // Matches: discordPresence.details = "Listening"
+    details: "Listening", 
+    // Matches: discordPresence.state = "Spotify"
+    state: "Spotify", 
 
     activities: [
       {
-        name: "Listening", 
-        type: 2, // Watching
-        state: "",
-        details: "()",
+        name: "Spotify", 
+        type: 2, // Listening
+        state: "Spotify",
+        details: "Listening",
         
+        // Matches C++ Unix timestamps (10-digit)
         timestamps: {
-          start: 1507665886000,
-          end: 1507665886000,
+          start: 1507665886,
+          end: 1507665886,
         },
 
         assets: {
+          // Matches: discordPresence.largeImageText
           large_text: "Numbani",
+          // Matches: discordPresence.smallImageText
           small_text: "Rogue - Level 100",
-          large_image: "numbani", 
+          // Matches: discordPresence.largeImageKey
+          large_image: "file_000000001f807209a388e05d3cda4395", 
+          // From your C++ logic, small_image wasn't explicitly set, but added for consistency
           small_image: "rogue",   
         },
 
         party: {
+          // Matches: discordPresence.partyId
           id: "ae488379-351d-4a4f-ad32-2b9b01c91657",
+          // Matches: discordPresence.partySize (1) and partyMax (5)
           size: [1, 5], 
         },
 
         secrets: {
+          // Matches: discordPresence.joinSecret
           join: "MTI4NzM0OjFpMmhuZToxMjMxMjM="
         }
       },
@@ -171,7 +182,7 @@ export const botConfig = {
     },
     verificationCooldown: 5000,  
     maxVerificationAttempts: 3,   
-    attemptWindow: 60000,           
+    attemptWindow: 60000,            
     maxCooldownEntries: 10000,
     maxAttemptEntries: 10000,
     cooldownCleanupInterval: 300000, 
@@ -244,7 +255,6 @@ if (configErrors.length > 0) {
 // =========================
 // EXPORTS (The Fix)
 // =========================
-// This ensures 'import { BotConfig }' works in database.js
 export const BotConfig = botConfig; 
 
 export function getColor(path, fallback = "#99AAB5") {
@@ -252,6 +262,27 @@ export function getColor(path, fallback = "#99AAB5") {
   if (typeof path === "string" && path.startsWith("#")) return parseInt(path.replace("#", ""), 16);
   const result = path.split(".").reduce((obj, key) => (obj && obj[key] !== undefined ? obj[key] : fallback), botConfig.embeds.colors);
   return typeof result === "string" && result.startsWith("#") ? parseInt(result.replace("#", ""), 16) : result;
+}
+
+/**
+ * C++ Equivalent Implementation for reference/integration
+ * This mimics the logic used in your static void UpdatePresence()
+ */
+export function getPresenceForCPP() {
+  const act = botConfig.presence.activities[0];
+  return {
+    state: act.state,
+    details: act.details,
+    startTimestamp: act.timestamps.start,
+    endTimestamp: act.timestamps.end,
+    largeImageKey: act.assets.large_image,
+    largeImageText: act.assets.large_text,
+    smallImageText: act.assets.small_text,
+    partyId: act.party.id,
+    partySize: act.party.size[0],
+    partyMax: act.party.size[1],
+    joinSecret: act.secrets.join
+  };
 }
 
 export default botConfig;
