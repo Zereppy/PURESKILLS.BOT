@@ -12,14 +12,14 @@ export const botConfig = {
   // =========================
   presence: {
     status: "online",
-    bio: "Listening | Competitive | Rogue - Level 100",
+    bio: "Listening",
 
     activities: [
       {
-        name: ",help", 
+        name: "Listening", 
         type: 3, // Watching
-        state: "Listening",
-        details: "Competitive",
+        state: "Spotify",
+        details: "(https://open.spotify.com/track/4Oai6CNbyktfWoRCjXU7eh)",
         
         timestamps: {
           start: 1507665886000,
