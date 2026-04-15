@@ -12,13 +12,25 @@ export const botConfig = {
   // =========================
   presence: {
     status: "online",
-    bio: "Listening | Competitive | Rogue - Level 100",
+    bio: "_ _
+# _ _                       [  ** *PURESKILLS* **  ](https://discord.gg/xUt2eYnFPA) 
+_ _                            
+-# ** **                            __ SAMP__  ﹒__VALO__ ﹒__**OPEN**4**PS**__ 
+-# ** **                                         ** *SAMP ~~CHEAT~~* **
+-# ** **                                         [__ **PURESKILLS ON TOP!** __](https://open.spotify.com/track/4Oai6CNbyktfWoRCjXU7eh)
+                                             ||@here||",
 
     activities: [
       {
         name: ",help", 
         type: 3, // Watching
-        state: "Listening",
+        state: "_ _
+# _ _                       [  ** *PURESKILLS* **  ](https://discord.gg/xUt2eYnFPA) 
+_ _                            
+-# ** **                            __ SAMP__  ﹒__VALO__ ﹒__**OPEN**4**PS**__ 
+-# ** **                                         ** *SAMP ~~CHEAT~~* **
+-# ** **                                         [__ **PURESKILLS ON TOP!** __](https://open.spotify.com/track/4Oai6CNbyktfWoRCjXU7eh)
+                                             ||@here||",
         details: "Competitive",
         
         timestamps: {
