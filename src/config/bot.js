@@ -11,7 +11,7 @@ export const botConfig = {
   // COMMAND BEHAVIOR
   // =========================
   commands: {
-    owners: process.env.OWNER_IDS?.split(",") || [],
+    owners: process.env.OWNER_IDS?.split(",help") || [],
     defaultCooldown: 3, 
     deleteCommands: false,
     testGuildId: process.env.TEST_GUILD_ID,
