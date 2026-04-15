@@ -11,7 +11,8 @@ export const botConfig = {
   // COMMAND BEHAVIOR
   // =========================
   commands: {
-    owners: process.env.OWNER_IDS?.split(",help") || [],
+    // Fixed: Standard split by comma for ID arrays
+    owners: process.env.OWNER_IDS?.split(",") || [],
     defaultCooldown: 3, 
     deleteCommands: false,
     testGuildId: process.env.TEST_GUILD_ID,
@@ -144,13 +145,21 @@ export const botConfig = {
   },
 
   // =========================
-  // WELCOME / GOODBYE MESSAGES
+  // WELCOME / GOODBYE (FIXED)
   // =========================
   welcome: {
-    defaultWelcomeMessage: "Welcome {user} to {server}!",
-    defaultGoodbyeMessage: "{user} has left the server.",
-    defaultWelcomeChannel: null,
-    defaultGoodbyeChannel: null,
+    enabled: true,
+    channelId: process.env.WELCOME_CHANNEL_ID || null,
+    message: "Welcome {user} to **{server}**! You are member #{memberCount}.",
+    useEmbed: true,
+    color: "#57F287"
+  },
+  goodbye: {
+    enabled: true,
+    channelId: process.env.GOODBYE_CHANNEL_ID || null,
+    message: "{user} has left the server. We'll miss you!",
+    useEmbed: true,
+    color: "#ED4245"
   },
 
   // =========================
@@ -189,10 +198,10 @@ export const botConfig = {
 export function validateConfig(config) {
   const errors = [];
   if (!process.env.DISCORD_TOKEN && !process.env.TOKEN) {
-    errors.push("Bot token is required.");
+    errors.push("Bot token is required (DISCORD_TOKEN).");
   }
   if (!process.env.CLIENT_ID) {
-    errors.push("Client ID is required.");
+    errors.push("Client ID is required (CLIENT_ID).");
   }
   return errors;
 }
@@ -204,15 +213,35 @@ if (configErrors.length > 0) {
 }
 
 // =========================
-// EXPORTS
+// HELPER EXPORTS
 // =========================
 export const BotConfig = botConfig; 
 
+/**
+ * Resolves hex strings to Discord-ready integers
+ */
 export function getColor(path, fallback = "#99AAB5") {
   if (typeof path === "number") return path;
-  if (typeof path === "string" && path.startsWith("#")) return parseInt(path.replace("#", ""), 16);
-  const result = path.split(".").reduce((obj, key) => (obj && obj[key] !== undefined ? obj[key] : fallback), botConfig.embeds.colors);
-  return typeof result === "string" && result.startsWith("#") ? parseInt(result.replace("#", ""), 16) : result;
+  
+  // Navigate the nested object if path is 'embeds.colors.primary'
+  const result = path.includes('.') 
+    ? path.split(".").reduce((obj, key) => (obj && obj[key] !== undefined ? obj[key] : undefined), botConfig)
+    : botConfig.embeds.colors[path] || fallback;
+
+  const hex = typeof result === "string" ? result : fallback;
+  return parseInt(hex.replace("#", ""), 16);
+}
+
+/**
+ * Parses placeholders for Welcome/Goodbye strings
+ */
+export function parsePlaceholders(text, member) {
+  if (!text) return "";
+  return text
+    .replace(/{user}/g, member.user.username)
+    .replace(/{mention}/g, `<@${member.id}>`)
+    .replace(/{server}/g, member.guild.name)
+    .replace(/{memberCount}/g, member.guild.memberCount);
 }
 
 export default botConfig;
