@@ -8,47 +8,36 @@ export const botConfig = {
   description: "Titan Bot: Advanced Management & Competitive Integration",
 
   // =========================
-  // BOT PRESENCE (Translated from C++ DiscordRichPresence)
+  // BOT PRESENCE (C++ DiscordRichPresence Mapping)
   // =========================
   presence: {
     status: "online",
-    
-    // Bio string for use in internal bot commands
     bio: "Listening | Competitive | Rogue - Level 100",
 
     activities: [
       {
-        // Activity Name (The main text)
         name: ",help", 
-        
-        // Activity Type: 3 = Watching, 2 = Listening, 0 = Playing
-        type: 3, 
-
-        // 🟢 Data merged from your C++ UpdatePresence snippet:
+        type: 3, // Watching
         state: "Listening",
         details: "Competitive",
         
-        // Timestamps (Converted to JS Milliseconds)
         timestamps: {
           start: 1507665886000,
           end: 1507665886000,
         },
 
-        // Assets (Requires images uploaded in Developer Portal)
         assets: {
           large_text: "Numbani",
           small_text: "Rogue - Level 100",
-          large_image: "numbani_asset_name", // Replace with your uploaded asset key
-          small_image: "rogue_asset_name",   // Replace with your uploaded asset key
+          large_image: "numbani", 
+          small_image: "rogue",   
         },
 
-        // Party information
         party: {
           id: "ae488379-351d-4a4f-ad32-2b9b01c91657",
-          size: [1, 5], // partySize: 1, partyMax: 5
+          size: [1, 5], 
         },
 
-        // Secrets (Note: Mostly used for RPC, limited visibility for Bots)
         secrets: {
           join: "MTI4NzM0OjFpMmhuZToxMjMxMjM="
         }
@@ -233,7 +222,7 @@ export const botConfig = {
 };
 
 // =========================
-// UTILITIES & VALIDATION
+// VALIDATION LOGIC
 // =========================
 export function validateConfig(config) {
   const errors = [];
@@ -251,6 +240,12 @@ if (configErrors.length > 0) {
   logger.error("Configuration errors:", configErrors.join("\n"));
   if (process.env.NODE_ENV === "production") process.exit(1);
 }
+
+// =========================
+// EXPORTS (The Fix)
+// =========================
+// This ensures 'import { BotConfig }' works in database.js
+export const BotConfig = botConfig; 
 
 export function getColor(path, fallback = "#99AAB5") {
   if (typeof path === "number") return path;
