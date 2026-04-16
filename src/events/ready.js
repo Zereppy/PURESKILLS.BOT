@@ -12,10 +12,6 @@ export default {
       client.user.setPresence(config.bot.presence);
       async def on_ready():
     try:
-        await bot.change_presence(
-            activity=discord.Activity(type=discord.ActivityType.competing, name="Puresiklls.Security"),
-            status=discord.Status.dnd
-        )
 
       startupLog(`Ready! Logged in as ${client.user.tag}`);
       startupLog(`Serving ${client.guilds.cache.size} guild(s)`);
