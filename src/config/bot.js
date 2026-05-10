@@ -1,435 +1,226 @@
-import { logger } from '../utils/logger.js';
+const Discord = require('discord.js');
+const fs = require('fs');
 
+const { Manager } = require("erela.js");
+const Spotify = require("erela.js-spotify");
+const Facebook = require("erela.js-facebook");
+const Deezer = require("erela.js-deezer");
+const AppleMusic = require("erela.js-apple");
 
-
-export const botConfig = {
-
-  // =========================
-
-  // BOT PREFIX & IDENTITY
-
-  // =========================
-
-  prefix: "x",
-
-  description: "Titan Bot: Advanced Management & Competitive Integration",
-
-
-
-  // =========================
-
-  // COMMAND BEHAVIOR
-
-  // =========================
-
-  commands: {
-
-    owners: process.env.OWNER_IDS?.split(",help") || [],
-
-    defaultCooldown: 3, 
-
-    deleteCommands: false,
-
-    testGuildId: process.env.TEST_GUILD_ID,
-
-  },
-
-
-
-  // =========================
-
-  // APPLICATIONS SYSTEM
-
-  // =========================
-
-  applications: {
-
-    defaultQuestions: [
-
-      { question: "What is your name?", required: true },
-
-      { question: "How old are you?", required: true },
-
-      { question: "Why do you want to join?", required: true },
-
+// Discord client
+const client = new Discord.Client({
+    allowedMentions: {
+        parse: [
+            'users',
+            'roles'
+        ],
+        repliedUser: true
+    },
+    autoReconnect: true,
+    disabledEvents: [
+        "TYPING_START"
     ],
-
-    statusColors: {
-
-      pending: "#FFA500",
-
-      approved: "#00FF00",
-
-      denied: "#FF0000",
-
-    },
-
-    applicationCooldown: 24, 
-
-    deleteDeniedAfter: 7, 
-
-    deleteApprovedAfter: 30, 
-
-    managerRoles: [],
-
-  },
-
-
-
-  // =========================
-
-  // EMBED COLORS & BRANDING
-
-  // =========================
-
-  embeds: {
-
-    colors: {
-
-      primary: "#336699", 
-
-      secondary: "#2F3136", 
-
-      success: "#57F287", 
-
-      error: "#ED4245", 
-
-      warning: "#FEE75C", 
-
-      info: "#3498DB", 
-
-      light: "#FFFFFF",
-
-      dark: "#202225",
-
-      gray: "#99AAB5",
-
-      blurple: "#5865F2",
-
-      green: "#57F287",
-
-      yellow: "#FEE75C",
-
-      fuchsia: "#EB459E",
-
-      red: "#ED4245",
-
-      black: "#000000",
-
-      giveaway: { active: "#57F287", ended: "#ED4245" },
-
-      ticket: { open: "#57F287", claimed: "#FAA61A", closed: "#ED4245", pending: "#99AAB5" },
-
-      economy: "#F1C40F",
-
-      birthday: "#E91E63",
-
-      moderation: "#9B59B6",
-
-      priority: { none: "#95A5A6", low: "#3498db", medium: "#2ecc71", high: "#f1c40f", urgent: "#e74c3c" },
-
-    },
-
-    footer: { text: "Titan Bot", icon: null },
-
-    thumbnail: null,
-
-    author: { name: null, icon: null, url: null },
-
-  },
-
-
-
-  // =========================
-
-  // ECONOMY SETTINGS
-
-  // =========================
-
-  economy: {
-
-    currency: { name: "coins", namePlural: "coins", symbol: "$" },
-
-    startingBalance: 0,
-
-    baseBankCapacity: 100000,
-
-    dailyAmount: 100,
-
-    workMin: 10,
-
-    workMax: 100,
-
-    begMin: 5,
-
-    begMax: 50,
-
-    robSuccessRate: 0.4,
-
-    robFailJailTime: 3600000, 
-
-  },
-
-
-
-  // =========================
-
-  // TICKET SYSTEM
-
-  // =========================
-
-  tickets: {
-
-    defaultCategory: null,
-
-    supportRoles: [],
-
-    priorities: {
-
-      none: { emoji: "⚪", color: "#95A5A6", label: "None" },
-
-      low: { emoji: "🟢", color: "#2ECC71", label: "Low" },
-
-      medium: { emoji: "🟡", color: "#F1C40F", label: "Medium" },
-
-      high: { emoji: "🔴", color: "#E74C3C", label: "High" },
-
-      urgent: { emoji: "🚨", color: "#E91E63", label: "Urgent" },
-
-    },
-
-    defaultPriority: "none",
-
-    archiveCategory: null,
-
-    logChannel: null,
-
-  },
-
-
-
-  // =========================
-
-  // GIVEAWAY SETTINGS
-
-  // =========================
-
-  giveaways: {
-
-    defaultDuration: 86400000, 
-
-    minimumWinners: 1,
-
-    maximumWinners: 10,
-
-    minimumDuration: 300000, 
-
-    maximumDuration: 2592000000, 
-
-    allowedRoles: [],
-
-    bypassRoles: [],
-
-  },
-
-
-
-  // =========================
-
-  // VERIFICATION SETTINGS
-
-  // =========================
-
-  verification: {
-
-    defaultMessage: "Click the button below to verify yourself!",
-
-    defaultButtonText: "Verify",
-
-    autoVerify: {
-
-      defaultCriteria: "none",
-
-      defaultAccountAgeDays: 7,
-
-      serverSizeThreshold: 1000,
-
-      minAccountAge: 1,      
-
-      maxAccountAge: 365,      
-
-      sendDMNotification: true,
-
-      criteria: { account_age: "Account age based", server_size: "Small servers", none: "Immediate" }
-
-    },
-
-    verificationCooldown: 5000,  
-
-    maxVerificationAttempts: 3,   
-
-    attemptWindow: 60000,            
-
-    maxCooldownEntries: 10000,
-
-    maxAttemptEntries: 10000,
-
-    cooldownCleanupInterval: 300000, 
-
-    maxAuditMetadataBytes: 4096,
-
-    maxInMemoryAuditEntries: 1000,
-
-    logAllVerifications: true,
-
-    keepAuditTrail: true,
-
-  },
-
-
-
-  // =========================
-
-  // WELCOME / GOODBYE MESSAGES
-
-  // =========================
-
-  welcome: {
-
-    defaultWelcomeMessage: "Welcome {user} to {server}!",
-
-    defaultGoodbyeMessage: "{user} has left the server.",
-
-    defaultWelcomeChannel: null,
-
-    defaultGoodbyeChannel: null,
-
-  },
-
-
-
-  // =========================
-
-  // COUNTER CHANNELS
-
-  // =========================
-
-  counters: {
-
-    defaults: { name: "{name} Counter", type: "voice", channelName: "{name}-{count}" },
-
-    types: {
-
-      members: { name: "👥 Members", getCount: (guild) => guild.memberCount.toString() },
-
-      bots: { name: "🤖 Bots", getCount: (guild) => guild.members.cache.filter((m) => m.user.bot).size.toString() },
-
-    },
-
-  },
-
-
-
-  // =========================
-
-  // FEATURE TOGGLES
-
-  // =========================
-
-  features: {
-
-    economy: true,
-
-    leveling: true,
-
-    moderation: true,
-
-    logging: true,
-
-    welcome: true,
-
-    tickets: true,
-
-    giveaways: true,
-
-    birthday: true,
-
-    counter: true,
-
-    verification: true,
-
-    reactionRoles: true,
-
-    joinToCreate: true,
-
-  },
-
+    partials: [
+        Discord.Partials.Channel,
+        Discord.Partials.GuildMember,
+        Discord.Partials.Message,
+        Discord.Partials.Reaction,
+        Discord.Partials.User,
+        Discord.Partials.GuildScheduledEvent
+    ],
+    intents: [
+        Discord.GatewayIntentBits.Guilds,
+        Discord.GatewayIntentBits.GuildMembers,
+        Discord.GatewayIntentBits.GuildBans,
+        Discord.GatewayIntentBits.GuildEmojisAndStickers,
+        Discord.GatewayIntentBits.GuildIntegrations,
+        Discord.GatewayIntentBits.GuildWebhooks,
+        Discord.GatewayIntentBits.GuildInvites,
+        Discord.GatewayIntentBits.GuildVoiceStates,
+        Discord.GatewayIntentBits.GuildMessages,
+        Discord.GatewayIntentBits.GuildMessageReactions,
+        Discord.GatewayIntentBits.GuildMessageTyping,
+        Discord.GatewayIntentBits.DirectMessages,
+        Discord.GatewayIntentBits.DirectMessageReactions,
+        Discord.GatewayIntentBits.DirectMessageTyping,
+        Discord.GatewayIntentBits.GuildScheduledEvents,
+        Discord.GatewayIntentBits.MessageContent
+    ],
+    restTimeOffset: 0
+});
+
+
+const clientID = process.env.SPOTIFY_CLIENT_ID;
+const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+if (clientID && clientSecret) {
+    // Lavalink client
+    client.player = new Manager({
+        plugins: [
+            new AppleMusic(),
+            new Deezer(),
+            new Facebook(),
+            new Spotify({
+                clientID,
+                clientSecret,
+            })
+        ],
+        nodes: [
+            {
+                host: process.env.LAVALINK_HOST || "lava.link",
+                port: parseInt(process.env.LAVALINK_PORT) || 80,
+                password: process.env.LAVALINK_PASSWORD || "CorwinDev",
+                secure: Boolean(process.env.LAVALINK_SECURE) || false
+            },
+            {
+                host: "lavalink.techpoint.world",
+                port: 80,
+                password: "techpoint"
+            },
+        ],
+        send(id, payload) {
+            const guild = client.guilds.cache.get(id);
+            if (guild) guild.shard.send(payload);
+        },
+    })
+
+} else {
+    // Lavalink client
+    client.player = new Manager({
+        plugins: [
+            new AppleMusic(),
+            new Deezer(),
+            new Facebook(),
+        ],
+        nodes: [
+            {
+                host: process.env.LAVALINK_HOST || "lava.link",
+                port: parseInt(process.env.LAVALINK_PORT) || 80,
+                password: process.env.LAVALINK_PASSWORD || "CorwinDev",
+                secure: Boolean(process.env.LAVALINK_SECURE) || false
+            },
+        ],
+        send(id, payload) {
+            const guild = client.guilds.cache.get(id);
+            if (guild) guild.shard.send(payload);
+        }
+    })
+}
+const events = fs.readdirSync(`./src/events/music`).filter(files => files.endsWith('.js'));
+
+for (const file of events) {
+    const event = require(`./events/music/${file}`);
+    client.player.on(file.split(".")[0], event.bind(null, client)).setMaxListeners(0);
 };
 
+// Connect to database
+require("./database/connect")();
 
-
-// =========================
-
-// VALIDATION LOGIC
-
-// =========================
-
-export function validateConfig(config) {
-
-  const errors = [];
-
-  if (!process.env.DISCORD_TOKEN && !process.env.TOKEN) {
-
-    errors.push("Bot token is required.");
-
-  }
-
-  if (!process.env.CLIENT_ID) {
-
-    errors.push("Client ID is required.");
-
-  }
-
-  return errors;
-
+// Client settings
+client.config = require('./config/bot');
+client.changelogs = require('./config/changelogs');
+client.emotes = require("./config/emojis.json");
+client.webhooks = require("./config/webhooks.json");
+const webHooksArray = ['startLogs', 'shardLogs', 'errorLogs', 'dmLogs', 'voiceLogs', 'serverLogs', 'serverLogs2', 'commandLogs', 'consoleLogs', 'warnLogs', 'voiceErrorLogs', 'creditLogs', 'evalLogs', 'interactionLogs'];
+// Check if .env webhook_id and webhook_token are set
+if (process.env.WEBHOOK_ID && process.env.WEBHOOK_TOKEN) {
+    for (const webhookName of webHooksArray) {
+        client.webhooks[webhookName].id = process.env.WEBHOOK_ID;
+        client.webhooks[webhookName].token = process.env.WEBHOOK_TOKEN;
+    }
 }
 
+client.commands = new Discord.Collection();
+client.playerManager = new Map();
+client.triviaManager = new Map();
+client.queue = new Map();
 
+// Webhooks
+const consoleLogs = new Discord.WebhookClient({
+    id: client.webhooks.consoleLogs.id,
+    token: client.webhooks.consoleLogs.token,
+});
 
-const configErrors = validateConfig(botConfig);
+const warnLogs = new Discord.WebhookClient({
+    id: client.webhooks.warnLogs.id,
+    token: client.webhooks.warnLogs.token,
+});
 
-if (configErrors.length > 0) {
+// Load handlers
+fs.readdirSync('./src/handlers').forEach((dir) => {
+    fs.readdirSync(`./src/handlers/${dir}`).forEach((handler) => {
+        require(`./handlers/${dir}/${handler}`)(client);
+    });
+});
 
-  logger.error("Configuration errors:", configErrors.join("\n"));
+client.login(process.env.DISCORD_TOKEN);
 
-  if (process.env.NODE_ENV === "production") process.exit(1);
+process.on('unhandledRejection', error => {
+    console.error('Unhandled promise rejection:', error);
+    if (error) if (error.length > 950) error = error.slice(0, 950) + '... view console for details';
+    if (error.stack) if (error.stack.length > 950) error.stack = error.stack.slice(0, 950) + '... view console for details';
+    if(!error.stack) return
+    const embed = new Discord.EmbedBuilder()
+        .setTitle(`🚨・Unhandled promise rejection`)
+        .addFields([
+            {
+                name: "Error",
+                value: error ? Discord.codeBlock(error) : "No error",
+            },
+            {
+                name: "Stack error",
+                value: error.stack ? Discord.codeBlock(error.stack) : "No stack error",
+            }
+        ])
+        .setColor(client.config.colors.normal)
+    consoleLogs.send({
+        username: 'Bot Logs',
+        embeds: [embed],
+    }).catch(() => {
+        console.log('Error sending unhandledRejection to webhook')
+        console.log(error)
+    })
+});
 
-}
+process.on('warning', warn => {
+    console.warn("Warning:", warn);
+    const embed = new Discord.EmbedBuilder()
+        .setTitle(`🚨・New warning found`)
+        .addFields([
+            {
+                name: `Warn`,
+                value: `\`\`\`${warn}\`\`\``,
+            },
+        ])
+        .setColor(client.config.colors.normal)
+    warnLogs.send({
+        username: 'Bot Logs',
+        embeds: [embed],
+    }).catch(() => {
+        console.log('Error sending warning to webhook')
+        console.log(warn)
+    })
+});
 
-
-
-// =========================
-
-// EXPORTS
-
-// =========================
-
-export const BotConfig = botConfig; 
-
-
-
-export function getColor(path, fallback = "#99AAB5") {
-
-  if (typeof path === "number") return path;
-
-  if (typeof path === "string" && path.startsWith("#")) return parseInt(path.replace("#", ""), 16);
-
-  const result = path.split(".").reduce((obj, key) => (obj && obj[key] !== undefined ? obj[key] : fallback), botConfig.embeds.colors);
-
-  return typeof result === "string" && result.startsWith("#") ? parseInt(result.replace("#", ""), 16) : result;
-
-}
-
-
-
-export default botConfig;
+client.on(Discord.ShardEvents.Error, error => {
+    console.log(error)
+    if (error) if (error.length > 950) error = error.slice(0, 950) + '... view console for details';
+    if (error.stack) if (error.stack.length > 950) error.stack = error.stack.slice(0, 950) + '... view console for details';
+    if (!error.stack) return
+    const embed = new Discord.EmbedBuilder()
+        .setTitle(`🚨・A websocket connection encountered an error`)
+        .addFields([
+            {
+                name: `Error`,
+                value: `\`\`\`${error}\`\`\``,
+            },
+            {
+                name: `Stack error`,
+                value: `\`\`\`${error.stack}\`\`\``,
+            }
+        ])
+        .setColor(client.config.colors.normal)
+    consoleLogs.send({
+        username: 'Bot Logs',
+        embeds: [embed],
+    });
+});
